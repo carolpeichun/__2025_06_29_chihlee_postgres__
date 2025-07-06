@@ -14,7 +14,7 @@ CREATE TABLE [IF NOT EXISTS] table_name (
 CREATE TABLE IF NOT EXISTS student(
    student_id SERIAL PRIMARY KEY,
    name VARCHAR(20) NOT NULL,
-   major VARCHAR(20) UNIQUE
+   major VARCHAR(20)
 );
 ```
 
@@ -37,4 +37,50 @@ VALUES
   ('信忠', '英語');
 ```
 
+## 取得資料
+```sql
+SELECT 
+  select_list 
+FROM 
+  table_name 
+WHERE 
+  condition 
+ORDER BY 
+  sort_expression;
+```
+
+```sql
+SELECT student_id, name, major
+FROM  student;
+
+SELECT  name, major
+FROM  student;
+
+SELECT  *
+FROM  student
+WHERE name='信忠';
+
+SELECT  *
+FROM  student
+ORDER BY student_id DESC;
+
+SELECT  *
+FROM  student
+ORDER BY student_id DESC
+LIMIT 3;
+```
+
+## 修改和刪除
+```sql
+UPDATE student
+SET name = '阿柱',
+    major = '數學'
+WHERE student_id=2;
+
+DELETE FROM student
+WHERE student_id=2;
+
+DELETE FROM student
+WHERE student_id IN(1, 3, 4);
+```
 
