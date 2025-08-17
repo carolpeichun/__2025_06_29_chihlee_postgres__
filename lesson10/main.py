@@ -1,14 +1,14 @@
 import datasource
+import streamlit as st
 
-def main():   
+def main():
+    st.title("台鐵車站名稱列表")
     # 呼叫get_all_stations函式
     results = datasource.get_all_stations()
     if results:
-        print("台鐵車站資訊的站點名稱:") 
-        for station in results:
-            print(station) 
+        st.dataframe(results, width=400, height=600)
     else:
-        print("無法取得車站資料")
+        st.error("無法取得車站資料")
 
 if __name__ == "__main__":
     main()

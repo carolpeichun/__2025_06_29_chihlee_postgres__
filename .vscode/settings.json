@@ -1,4 +1,5 @@
 {
+    "chat.mcp.discovery.enabled": false,
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#215731",
         "activityBar.background": "#215731",
