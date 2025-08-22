@@ -77,6 +77,18 @@ if isinstance(selected_range, tuple) and len(selected_range) == 2:
 else:
     selected_start = selected_end = selected_range
 
+
+# 請使用datasource1.get_station_data_by_date() 取得車站資料,並顯示資料
 st.write("您選擇的車站:", station )
 #st.write("日期範圍:", min_date, "至", max_date)
 st.write("選取的日期:", selected_start, "至", selected_end)
+
+station_data = ds.get_station_data_by_date(station, selected_start, selected_end)
+
+if station_data is None:
+    st.error("無法取得車站資料，請稍後再試。")
+    st.stop()
+st.dataframe(station_data)
+
+
+
