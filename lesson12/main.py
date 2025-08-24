@@ -94,6 +94,17 @@ import pandas as pd
 if not isinstance(station_data, pd.DataFrame):
     try:
         station_df = pd.DataFrame(station_data)
+        # 如果資料是由 cursor.fetchall() 回傳的 tuple list，DataFrame 會使用 RangeIndex (0,1,2...)
+        # 此時要手動指定欄位名稱，讓之後的欄位對應與中文映射能正確運作。
+        if isinstance(station_df.columns, pd.RangeIndex):
+            # SQL 查詢中選出的欄位為: date, station, in_count, out_count
+            expected = ['date', 'station', 'in_count', 'out_count']
+            if station_df.shape[1] >= 4:
+                # 指定前四個欄位名稱，若有更多欄位則保留其餘的自動名稱
+                station_df.columns = expected + list(station_df.columns[len(expected):])
+            else:
+                # 若欄位數少於預期，則根據實際欄位數選用對應名稱
+                station_df.columns = expected[: station_df.shape[1] ]
     except Exception:
         st.error("取得的車站資料格式不正確。")
         st.stop()
