@@ -88,4 +88,54 @@ station_data = ds.get_station_data_by_date(station, selected_start, selected_end
 if station_data is None:
     st.error("無法取得車站資料，請稍後再試。")
     st.stop()
-st.dataframe(station_data)
+
+# 將資料轉為 pandas DataFrame（如果尚未是 DataFrame）
+import pandas as pd
+if not isinstance(station_data, pd.DataFrame):
+    try:
+        station_df = pd.DataFrame(station_data)
+    except Exception:
+        st.error("取得的車站資料格式不正確。")
+        st.stop()
+else:
+    station_df = station_data.copy()
+
+# 調整欄位顯示名稱（將常見欄位轉為中文名稱，其他欄位做格式化顯示）
+_mapping = {
+    'date': '日期',
+    'station': '車站',
+    'entry': '進站',
+    'entries': '進站',
+    'in': '進站',
+    'boardings': '進站',
+    'exit': '出站',
+    'exits': '出站',
+    'out': '出站',
+    'alightings': '出站',
+    'total': '合計',
+    'count': '數量'
+}
+new_cols = {}
+for col in station_df.columns:
+    key = str(col).lower().strip()
+    mapped = None
+    for k, v in _mapping.items():
+        if k == key or k in key:
+            mapped = v
+            break
+    if mapped is None:
+        mapped = str(col).replace('_', ' ').strip().title()
+    new_cols[col] = mapped
+
+station_df = station_df.rename(columns=new_cols)
+
+# 顯示資料並提供下載 CSV 的功能
+st.dataframe(station_df)
+
+try:
+    csv_bytes = station_df.to_csv(index=False).encode('utf-8-sig')
+    fname = f"{station}_{selected_start}_{selected_end}.csv"
+    st.download_button("下載 CSV", data=csv_bytes, file_name=fname, mime="text/csv")
+except Exception:
+    # 若無法轉為 CSV，仍顯示資料但不提供下載
+    pass
