@@ -1,0 +1,4 @@
+# 環境設定檔
+.env
+# Python cache files # 無用
+__pycache__
